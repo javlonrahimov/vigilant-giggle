@@ -17,11 +17,19 @@ func main() {
 		return
 	}
 
-	fmt.Println("Bot has startted successfully")
 
 	b.Handle(tb.OnText, func(m *tb.Message) {
-		b.Send(m.Sender, "hello world")
+		if(m.Text == "Hello there") {
+		    b.Send(m.Sender, "General Kenobi")
+	    }
 	})
 
+	b.Handle(tb.OnPhoto, func(m *tb.Message){
+		b.Send(m.Sender, "File size is -> ")
+	})
+
+	fmt.Println("Bot has startted successfully")
+
 	b.Start()
+
 }
