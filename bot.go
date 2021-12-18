@@ -9,7 +9,7 @@ import (
 
 func main() {
 	b, err := tb.NewBot(tb.Settings{
-		Token: "2115182921:AAEpI_nyJmZi0EGlLKBVlnmJQQfr-3kRnDs",
+		Token:  "2115182921:AAEpI_nyJmZi0EGlLKBVlnmJQQfr-3kRnDs",
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 
@@ -17,15 +17,28 @@ func main() {
 		return
 	}
 
-
 	b.Handle(tb.OnText, func(m *tb.Message) {
-		if(m.Text == "Hello there") {
-		    b.Send(m.Sender, "General Kenobi")
-	    }
+		if m.Text == "Hello there" {
+			b.Send(m.Sender, "General Kenobi")
+		}
 	})
 
-	b.Handle(tb.OnPhoto, func(m *tb.Message){
-		b.Send(m.Sender, "File size is -> ")
+	b.Handle("/echo", func(m *tb.Message) {
+		if !m.Private() {
+			return
+		}
+		b.Send(m.Sender, m.Payload)
+		fmt.Println(m.Payload)
+	})
+
+	b.Handle("/image", func(m *tb.Message) {
+		if !m.Private() {
+			return
+		}
+		switch m.Payload {
+		case "screenshoot":
+			b.Send(m.Sender, &tb.Photo{File: tb.FromDisk("image.png")})
+		}
 	})
 
 	fmt.Println("Bot has startted successfully")
